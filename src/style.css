@@ -1,0 +1,19 @@
+.App {
+    padding: 10px;
+    margin: 20px;
+    background-color: white;
+  }
+  .customer {
+    padding: 10px;
+    margin: 20px;
+    background-color: white;
+  }
+  .reply {
+    padding: 10px;
+    margin: 20px;
+    background-color: white;
+  }
+  body {
+    background-color: rgb(226, 226, 226);
+  }
+  
