@@ -7,6 +7,8 @@ import SendIcon from '@mui/icons-material/Send';
 import { TextField } from "@mui/material";
 import { useState } from "react";
 import Picker from "emoji-picker-react";
+import { common, lime } from "@mui/material/colors";
+
 export default function ReplyMessage() {
     
     //Emoji
@@ -20,7 +22,7 @@ export default function ReplyMessage() {
   return (
     <Paper className="reply"
       component="form"
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
+      sx={{ p: '2px 4px', display: 'flex' ,bgcolor:common}}
     >
       <IconButton sx={{ p: '10px' }} aria-label="menu">
         <EmojiEmotionsIcon onClick={() => setShowPicker((val) => !val)} />
@@ -33,7 +35,7 @@ export default function ReplyMessage() {
       
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       
-      <IconButton color="primary" sx={{ p: '10px' }} aria-label="Send">
+      <IconButton color="primary" sx={{ p: '11px'}} aria-label="Send">
         <SendIcon />
       </IconButton>
       
