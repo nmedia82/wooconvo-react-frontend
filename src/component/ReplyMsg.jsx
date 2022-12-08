@@ -20,6 +20,7 @@ import { common, lime } from "@mui/material/colors";
 import Attachments from "./Attachment";
 import {
   DeleteOutline,
+  Reply,
   SendAndArchiveOutlined,
   SendOutlined,
 } from "@mui/icons-material";
@@ -76,6 +77,7 @@ export default function ReplyMsg({ onReplySend }) {
           sx={{ p: 1 }}
           aria-label="Send"
           onClick={() => onReplySend(ReplyText)}
+          disabled={ReplyText === ""}
         >
           <SendOutlined />
         </IconButton>
