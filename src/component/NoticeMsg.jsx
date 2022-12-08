@@ -1,15 +1,24 @@
-import React from 'react'
-import { ListItem, Typography, Grid, ListItemAvatar,ListItemText, Avatar, List} from "@mui/material";
+import React from "react";
+import {
+  ListItem,
+  Typography,
+  Grid,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  List,
+} from "@mui/material";
 import { pink } from "@mui/material/colors";
 import InfoIcon from "@mui/icons-material/Info";
 
-export default function Notice() {
+export default function NoticeMsg({ message }) {
   return (
-    <div> 
-        <List
+    <div>
+      <List
         sx={{ width: "100%", bgcolor: "background.paper" }}
         component="nav"
-        aria-labelledby="nested-list-subheader">
+        aria-labelledby="nested-list-subheader"
+      >
         <ListItem alignItems="flex-start">
           <Grid>
             <ListItemAvatar>
@@ -27,14 +36,14 @@ export default function Notice() {
                   variant="h6"
                   color="text.primary"
                 >
-                  Najeeb Ahmad
+                  {message.message}
                 </Typography>
                 <Typography
                   sx={{ display: "inline", ml: 2 }}
                   variant="body2"
                   color="text.primary"
                 >
-                  Monday, 7 March 2022.
+                  {message.date}
                 </Typography>
               </React.Fragment>
             }
@@ -42,5 +51,5 @@ export default function Notice() {
         </ListItem>
       </List>
     </div>
-  )
+  );
 }
