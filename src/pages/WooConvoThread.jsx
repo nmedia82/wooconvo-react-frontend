@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Chip } from "@mui/material";
+import { Chip, Backdrop, CircularProgress } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/Info";
 import Divider from "@mui/material/Divider";
@@ -11,13 +11,18 @@ import ReplyMsg from "../component/ReplyMsg";
 import { addMessage } from "../services/modalService";
 
 export default function WooConvoThread({ Thread }) {
+  const [isWorking, setIsWorking] = useState(false);
+
   const handleReplySend = async (reply_text) => {
+    setIsWorking(true);
     const { data: response } = await addMessage(reply_text);
+    setIsWorking(false);
     console.log(response);
   };
   return (
     <div className="App">
-      <Chip label="December 2" color="primary" />
+      <Chip label="#55 - December 2" color="primary" />
+      <Chip label={`Total Messages ${Thread.length}`} color="primary" />
 
       {Thread.map((msg, index) => (
         <div key={index}>
@@ -38,6 +43,14 @@ export default function WooConvoThread({ Thread }) {
 
       {/* Reply to --- */}
       <ReplyMsg onReplySend={handleReplySend} />
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isWorking}
+        onClick={() => setIsWorking(false)}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 }

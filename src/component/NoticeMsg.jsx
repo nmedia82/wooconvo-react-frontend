@@ -33,7 +33,7 @@ export default function NoticeMsg({ message }) {
               <React.Fragment>
                 <Typography
                   sx={{ display: "inline" }}
-                  variant="h6"
+                  variant="body1"
                   color="text.primary"
                 >
                   {message.message}

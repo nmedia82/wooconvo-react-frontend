@@ -34,8 +34,8 @@ export default function CustomerMsg({ message }) {
           secondary={
             <React.Fragment>
               <Typography
-                sx={{ display: "inline" }}
-                variant="h6"
+                sx={{ display: "inline", fontWeight: "bold" }}
+                variant="body1"
                 color="text.primary"
               >
                 {message.user_name}
