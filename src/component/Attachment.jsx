@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Box, IconButton, Divider } from "@mui/material";
+import { Box, IconButton, Divider,Tooltip } from "@mui/material";
 import { AttachFileOutlined } from "@mui/icons-material";
 function Attachments({ onFileUpload }) {
   const hiddenFileInput = useRef(null);
@@ -9,7 +9,7 @@ function Attachments({ onFileUpload }) {
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
-
+    
   return (
     <Box>
       <input
@@ -19,14 +19,16 @@ function Attachments({ onFileUpload }) {
         onChange={onFileUpload}
         style={{ display: "none" }}
       />
-      <IconButton
-        color="secondary"
-        sx={{ p: 1 }}
-        aria-label="Send"
-        onClick={handleClick}
-      >
-        <AttachFileOutlined />
-      </IconButton>
+      <Tooltip title="Attach File">
+        <IconButton
+          color="secondary"
+          sx={{ p: 1 }}
+          aria-label="Send"
+          onClick={handleClick}
+        >
+          <AttachFileOutlined />
+        </IconButton>
+      </Tooltip>
       <Divider sx={{ height: "auto" }} orientation="vertical" />
     </Box>
   );

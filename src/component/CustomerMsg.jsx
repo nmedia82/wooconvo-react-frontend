@@ -23,22 +23,21 @@ export default function CustomerMsg({ message }) {
           children: `${name.split(' ')[0][0]}`,
     };
   }
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   
   const handleClick = () => {
     setOpen(!open);
   };
   return (
     <div>
-      
       <ListItemButton onClick={handleClick}>
         <ListItemAvatar>
        
           <Avatar
             sx={{ bgcolor: blue[500] }}
             {...stringAvatar("Najeeb Ahmad")}
-           />
-       
+          />
+         
         </ListItemAvatar>
         <ListItemText
           secondary={

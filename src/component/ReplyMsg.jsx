@@ -8,7 +8,8 @@ import {
   Typography,
   Card,
   CardContent,
-  CardActions
+  CardActions,
+  Tooltip
 } from "@mui/material";
 import { useState } from "react";
 import { common } from "@mui/material/colors";
@@ -52,7 +53,7 @@ export default function ReplyMsg({ onReplySend }) {
         className="reply"
         component="form"
         sx={{ p: "2px 4px", display: "flex", bgcolor: common }}
-      >
+      >    
         <Attachments onFileUpload={handleFileUpload} />
 
         <TextField
@@ -64,7 +65,8 @@ export default function ReplyMsg({ onReplySend }) {
         />
 
         <Divider sx={{ height: "auto" }} orientation="vertical" />
-
+        
+        
         <IconButton
           color="primary"
           sx={{ p: 1 }}
@@ -74,6 +76,7 @@ export default function ReplyMsg({ onReplySend }) {
         >
           <SendOutlined />
         </IconButton>
+        
       </Paper>
 
       {/* Attachments Display*/}
@@ -98,6 +101,7 @@ export default function ReplyMsg({ onReplySend }) {
               </Typography>
             </CardContent>
             <CardActions>
+              <Tooltip title="Delect File" >
               <IconButton
                 color="primary"
                 sx={{ p: 1 }}
@@ -106,6 +110,7 @@ export default function ReplyMsg({ onReplySend }) {
               >
                 <DeleteOutline />
               </IconButton>
+              </Tooltip>
             </CardActions>
           </Card>
         ))}
