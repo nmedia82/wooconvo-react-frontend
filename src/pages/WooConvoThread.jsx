@@ -32,7 +32,7 @@ export default function WooConvoThread({ Thread }) {
 
           {/* Collapse Icon */}
           <IconButton
-          onClick={handletoggle()}
+          onClick={handletoggle}
           color="primary"
           sx={{ ml: 47 }}
           aria-label="Unfold/More"
