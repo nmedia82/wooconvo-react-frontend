@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/wooconvo-react-frontend/static/css/main.befa9f39.css",
+    "main.js": "/wooconvo-react-frontend/static/js/main.d8534b1a.js",
+    "static/js/787.f47a1a6c.chunk.js": "/wooconvo-react-frontend/static/js/787.f47a1a6c.chunk.js",
+    "index.html": "/wooconvo-react-frontend/index.html",
+    "main.befa9f39.css.map": "/wooconvo-react-frontend/static/css/main.befa9f39.css.map",
+    "main.d8534b1a.js.map": "/wooconvo-react-frontend/static/js/main.d8534b1a.js.map",
+    "787.f47a1a6c.chunk.js.map": "/wooconvo-react-frontend/static/js/787.f47a1a6c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.befa9f39.css",
+    "static/js/main.d8534b1a.js"
+  ]
+}
