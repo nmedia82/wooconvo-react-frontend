@@ -4,27 +4,20 @@ import { getOrderDetail } from "./services/modalService";
 import { addMessage } from "./services/modalService";
 import { Box } from "@mui/system";
 import NavBar from "./component/NavBar";
+import pluginData from "./services/pluginData";
 
 import { Backdrop, CircularProgress } from "@mui/material";
-
-// window.WOOCONVO_Data = {
-//   api_url: "https://code.najeebmedia.com/wp-json/wooconvo/v1",
-//   user_id: 1,
-//   order_id: 33,
-//   order_date: new Date(),
-// };
-
 function App() {
   const [Thread, setThread] = useState([]);
   const [FilterThread, setFilterThread] = useState([]);
   const [showMore, setshowMore] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
 
+  const { order_date, order_id } = pluginData;
+
   useEffect(() => {
     const loadThread = async () => {
-      const { data: order } = await getOrderDetail(
-        window.WOOCONVO_Data.order_id
-      );
+      const { data: order } = await getOrderDetail(order_id);
       const threads = [...order.data.thread];
       // console.log(order);
       setIsWorking(false);
@@ -63,8 +56,8 @@ function App() {
     <Box className="App">
       <NavBar
         TotalCount={FilterThread.length}
-        OrderID={window.WOOCONVO_Data.order_id}
-        OrderDate={window.WOOCONVO_Data.order_date}
+        OrderID={order_id}
+        OrderDate={order_date}
         onCollapsed={() => setshowMore(!showMore)}
         showMore={showMore}
         onSearchThread={handleSearch}
