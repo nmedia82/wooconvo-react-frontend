@@ -7,12 +7,12 @@ import NavBar from "./component/NavBar";
 
 import { Backdrop, CircularProgress } from "@mui/material";
 
-window.WOOCONVO_Data = {
-  api_url: "https://code.najeebmedia.com/wp-json/wooconvo/v1",
-  user_id: 1,
-  order_id: 33,
-  order_date: new Date(),
-};
+// window.WOOCONVO_Data = {
+//   api_url: "https://code.najeebmedia.com/wp-json/wooconvo/v1",
+//   user_id: 1,
+//   order_id: 33,
+//   order_date: new Date(),
+// };
 
 function App() {
   const [Thread, setThread] = useState([]);
