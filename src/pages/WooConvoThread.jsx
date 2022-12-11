@@ -5,8 +5,6 @@ import MessagesBody from "../component/Messages";
 export default function WooConvoThread({ Thread, showMore, onReplySend }) {
   return (
     <>
-      {console.log("rending")}
-
       <MessagesBody Thread={Thread} showMore={showMore} />
 
       <Divider variant="inset" component="h2" sx={{ height: 10 }} />

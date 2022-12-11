@@ -13,7 +13,7 @@ function App() {
   const [showMore, setshowMore] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
 
-  const { order_date, order_id } = pluginData;
+  const { order_date, order_id, context } = pluginData;
 
   useEffect(() => {
     const loadThread = async () => {
@@ -53,11 +53,12 @@ function App() {
   };
 
   return (
-    <Box className="App">
+    <Box id="wooconvo-front-wrapper">
       <NavBar
         TotalCount={FilterThread.length}
         OrderID={order_id}
         OrderDate={order_date}
+        Context={context}
         onCollapsed={() => setshowMore(!showMore)}
         showMore={showMore}
         onSearchThread={handleSearch}
