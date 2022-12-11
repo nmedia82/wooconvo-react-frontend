@@ -19,7 +19,7 @@ export default function NoticeMsg({ message }) {
         component="nav"
         aria-labelledby="nested-list-subheader"
       >
-        <ListItem alignItems="flex-start">
+        <ListItem alignItems="center">
           <Grid>
             <ListItemAvatar>
               <Avatar sx={{ bgcolor: pink[500] }}>
@@ -30,22 +30,22 @@ export default function NoticeMsg({ message }) {
           </Grid>
           <ListItemText
             secondary={
-              <React.Fragment>
+              <>
                 <Typography
                   sx={{ display: "inline" }}
-                  variant="body1"
+                  variant="span"
                   color="text.primary"
                 >
                   {message.message}
                 </Typography>
                 <Typography
                   sx={{ display: "inline", ml: 2 }}
-                  variant="body2"
+                  variant="span"
                   color="text.primary"
                 >
                   {message.date}
                 </Typography>
-              </React.Fragment>
+              </>
             }
           />
         </ListItem>
