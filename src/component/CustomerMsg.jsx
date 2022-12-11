@@ -10,7 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 //import InfoIcon from "@mui/icons-material/Info";
-import { blue } from "@mui/material/colors";
+import { blue, green } from "@mui/material/colors";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
@@ -34,8 +34,11 @@ export default function CustomerMsg({ message, showMore }) {
       <ListItemButton onClick={handleClick}>
         <ListItemAvatar>
           <Avatar
-            sx={{ bgcolor: blue[500] }}
-            {...stringAvatar("Najeeb Ahmad")}
+            sx={{
+              bgcolor:
+                message.user_type === "customer" ? green[600] : blue[600],
+            }}
+            {...stringAvatar(message.user_name.toUpperCase())}
           />
         </ListItemAvatar>
         <ListItemText
