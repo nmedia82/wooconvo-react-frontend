@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { Box, IconButton, Divider,Tooltip } from "@mui/material";
+import { Box, IconButton, Divider, Tooltip } from "@mui/material";
 import { AttachFileOutlined } from "@mui/icons-material";
-function Attachments({ onFileUpload }) {
+function Attachments({ onFileSelected }) {
   const hiddenFileInput = useRef(null);
 
   // Programatically click the hidden file input element
@@ -9,14 +9,14 @@ function Attachments({ onFileUpload }) {
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
-    
+
   return (
     <Box>
       <input
         multiple
         type="file"
         ref={hiddenFileInput}
-        onChange={onFileUpload}
+        onChange={onFileSelected}
         style={{ display: "none" }}
       />
       <Tooltip title="Attach File">

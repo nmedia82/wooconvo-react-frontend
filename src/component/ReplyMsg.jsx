@@ -9,43 +9,67 @@ import {
   Card,
   CardContent,
   CardActions,
-  Tooltip
+  Tooltip,
+  Chip,
+  Button,
 } from "@mui/material";
 import { useState } from "react";
 import { common } from "@mui/material/colors";
 import Attachments from "./Attachment";
-import {
-  DeleteOutline,
-  SendOutlined
-} from "@mui/icons-material";
+import { DeleteOutline, SendOutlined } from "@mui/icons-material";
+import { display } from "@mui/system";
+import { wooconvo_makeid } from "../services/helper";
+import { uploadFiles } from "../services/modalService";
+import pluginData from "../services/pluginData";
+import httpService from "../services/httpService";
 
 export default function ReplyMsg({ onReplySend }) {
   //Emoji
   const [ReplyText, setReplyText] = useState("");
   const [Files, setFiles] = useState([]);
 
-  const handleFileUpload = (event) => {
-    const fileUploaded = event.target.files;
+  const handleFileSelected = (event) => {
+    let fileUploaded = event.target.files;
+    // fileUploaded = Object.keys(fileUploaded).map((f) => {
+    //   fileUploaded[f].id = wooconvo_makeid();
+    //   return fileUploaded[f];
+    // });
     const files = [...Files, ...fileUploaded];
-    // console.log(files);
     previewFile(files);
     setFiles(files);
   };
 
   const previewFile = (files) => {
-    files.forEach((file, index) => {
+    files.forEach((file) => {
       var reader = new FileReader();
       reader.onloadend = function () {
-        document.getElementById(`preview-${index}`).src = reader.result;
+        document.getElementById(`preview-${file.id}`).src = reader.result;
       };
       reader.readAsDataURL(file);
     });
   };
 
-  const hanldeImageRemove = (del_index) => {
+  const hanldeImageRemove = (file_id) => {
     const files = [...Files];
-    const filter = files.filter((file, index) => index !== del_index);
+    const filter = files.filter((file) => file.id !== file_id);
     setFiles(filter);
+  };
+
+  // upload to server
+  const handleFileUpload = async () => {
+    const files = [...Files];
+    // const { data: resp } = await uploadFiles(files[0]);
+    console.log(files[0]);
+    const { api_url, user_id, order_id } = pluginData;
+    const url = `${api_url}/upload-file`;
+    const data = new FormData();
+    data.append("file", files[0]);
+    // data.append("order_id", order_id);
+    // data.append("user_id", user_id);
+    // const data = { order_id, file };
+    const headers = { headers: { "content-type": "multipart/form-data" } };
+    const resp = await httpService.post(url, data, headers);
+    console.log(resp);
   };
   return (
     <Box>
@@ -53,8 +77,8 @@ export default function ReplyMsg({ onReplySend }) {
         className="reply"
         component="form"
         sx={{ p: "2px 4px", display: "flex", bgcolor: common }}
-      >    
-        <Attachments onFileUpload={handleFileUpload} />
+      >
+        <Attachments onFileSelected={handleFileSelected} />
 
         <TextField
           value={ReplyText}
@@ -65,8 +89,7 @@ export default function ReplyMsg({ onReplySend }) {
         />
 
         <Divider sx={{ height: "auto" }} orientation="vertical" />
-        
-        
+
         <IconButton
           color="primary"
           sx={{ p: 1 }}
@@ -76,45 +99,38 @@ export default function ReplyMsg({ onReplySend }) {
         >
           <SendOutlined />
         </IconButton>
-        
       </Paper>
 
       {/* Attachments Display*/}
 
-      <Box sx={{ p: 3}}>
-        {Files.map((file, index) => (
-          <Card sx={{ maxWidth: 175,display:"inline-block", ml:2}} key={index}>
-            {/* <CardMedia
-            component="img"
-            height="140"
-            image="/static/images/cards/contemplative-reptile.jpg"
-            alt="green iguana"
-          /> */}
+      <Box
+        sx={{ p: 3, flexDirection: "row", display: "flex", flexWrap: "wrap" }}
+      >
+        {Files.map((file) => (
+          <Box className="preview-thumb" key={file.id}>
             <img
-              id={`preview-${index}`}
-              alt={file.name}
-              style={{ objectFit: true, width: 80, textAlign: "center", height:100 }}
+              className="preview-thumb-img"
+              height="100"
+              width="150"
+              id={`preview-${file.id}`}
             />
-            <CardContent sx={{minWidth:"max-content"}}>
-              <Typography variant="body2" component="p">
-                {file.name}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Tooltip title="Delect File" >
+            <p className="preview-thumb-tool">
               <IconButton
                 color="primary"
                 sx={{ p: 1 }}
                 aria-label="Send"
-                onClick={() => hanldeImageRemove(index)}
+                onClick={() => hanldeImageRemove(file.id)}
               >
                 <DeleteOutline />
               </IconButton>
-              </Tooltip>
-            </CardActions>
-          </Card>
+              <Typography variant="span" display={"block"}>
+                {file.name}
+              </Typography>
+            </p>
+          </Box>
         ))}
       </Box>
+      <Button onClick={handleFileUpload}>Upload File</Button>
     </Box>
   );
 }
