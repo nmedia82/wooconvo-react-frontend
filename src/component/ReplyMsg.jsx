@@ -30,10 +30,10 @@ export default function ReplyMsg({ onReplySend }) {
 
   const handleFileSelected = (event) => {
     let fileUploaded = event.target.files;
-    // fileUploaded = Object.keys(fileUploaded).map((f) => {
-    //   fileUploaded[f].id = wooconvo_makeid();
-    //   return fileUploaded[f];
-    // });
+    fileUploaded = Object.keys(fileUploaded).map((f) => {
+      fileUploaded[f].id = wooconvo_makeid();
+      return fileUploaded[f];
+    });
     const files = [...Files, ...fileUploaded];
     previewFile(files);
     setFiles(files);
@@ -43,7 +43,7 @@ export default function ReplyMsg({ onReplySend }) {
     files.forEach((file) => {
       var reader = new FileReader();
       reader.onloadend = function () {
-        document.getElementById(`preview-${file.id}`).src = reader.result;
+        document.getElementById(`preview-${file.name}`).src = reader.result;
       };
       reader.readAsDataURL(file);
     });
@@ -51,25 +51,26 @@ export default function ReplyMsg({ onReplySend }) {
 
   const hanldeImageRemove = (file_id) => {
     const files = [...Files];
-    const filter = files.filter((file) => file.id !== file_id);
+    const filter = files.filter((file) => file.name !== file_id);
     setFiles(filter);
   };
 
   // upload to server
   const handleFileUpload = async () => {
     const files = [...Files];
-    // const { data: resp } = await uploadFiles(files[0]);
-    console.log(files[0]);
+    files.forEach((file) => uploadFile(file));
+  };
+
+  const uploadFile = async (file) => {
+    console.log(file);
     const { api_url, user_id, order_id } = pluginData;
     const url = `${api_url}/upload-file`;
     const data = new FormData();
-    data.append("file", files[0]);
-    // data.append("order_id", order_id);
-    // data.append("user_id", user_id);
-    // const data = { order_id, file };
-    const headers = { headers: { "content-type": "multipart/form-data" } };
-    const resp = await httpService.post(url, data, headers);
-    console.log(resp);
+    data.append("file", file);
+    data.append("order_id", order_id);
+    const response = await fetch(url, { method: "POST", body: data });
+    let data2 = await response.json();
+    console.log(data2);
   };
   return (
     <Box>
@@ -107,19 +108,19 @@ export default function ReplyMsg({ onReplySend }) {
         sx={{ p: 3, flexDirection: "row", display: "flex", flexWrap: "wrap" }}
       >
         {Files.map((file) => (
-          <Box className="preview-thumb" key={file.id}>
+          <Box className="preview-thumb" key={file.name}>
             <img
               className="preview-thumb-img"
               height="100"
               width="150"
-              id={`preview-${file.id}`}
+              id={`preview-${file.name}`}
             />
             <p className="preview-thumb-tool">
               <IconButton
                 color="primary"
                 sx={{ p: 1 }}
                 aria-label="Send"
-                onClick={() => hanldeImageRemove(file.id)}
+                onClick={() => hanldeImageRemove(file.name)}
               >
                 <DeleteOutline />
               </IconButton>
