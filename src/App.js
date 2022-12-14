@@ -9,6 +9,7 @@ import pluginData from "./services/pluginData";
 import { Backdrop, CircularProgress } from "@mui/material";
 function App() {
   const [Thread, setThread] = useState([]);
+  const [Attachments, setAttachments] = useState([]);
   const [FilterThread, setFilterThread] = useState([]);
   const [showMore, setshowMore] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
@@ -29,16 +30,49 @@ function App() {
     loadThread();
   }, []);
 
-  const handleReplySend = async (reply_text) => {
+  const handleReplySend = async (reply_text, files = []) => {
     setIsWorking(true);
-    const { data: response } = await addMessage(reply_text);
-    const { success, data: thread } = response;
+    const attachments = await handleFileUpload(files);
+    // const attachments = [...Attachments];
+    console.log(attachments);
+    const { data: response } = await addMessage(reply_text, attachments);
+    const { success, data: order } = response;
+    const { thread } = order;
+    // console.log(thread);
     setIsWorking(false);
     if (success) {
       setThread(thread);
       setFilterThread(thread);
     }
-    console.log(response);
+  };
+
+  // upload to server
+  const handleFileUpload = (files) => {
+    var promises = [];
+    var attachments = [];
+    files.forEach(async (file) => {
+      promises.push(
+        uploadFile(file).then((file) => {
+          attachments.push(file);
+        })
+      );
+    });
+
+    return Promise.all(promises).then(attachments);
+    // return [...Attachments];
+  };
+
+  const uploadFile = async (file) => {
+    // console.log(file);
+    const { api_url, user_id, order_id } = pluginData;
+    const url = `${api_url}/upload-file`;
+    const data = new FormData();
+    data.append("file", file);
+    data.append("order_id", order_id);
+    const response = await fetch(url, { method: "POST", body: data });
+    return response.json(); // console.log(attachment);
+
+    // console.log(attachments);
   };
 
   const handleSearch = (str) => {

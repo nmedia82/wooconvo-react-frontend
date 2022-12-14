@@ -71,10 +71,10 @@ function NavBar({
           </Typography>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <TextField
+              sx={{ bgcolor: "white" }}
               label="Search"
               size="small"
-              color="info"
-              variant="standard"
+              variant="filled"
               id="margin-none"
               onChange={(e) => onSearchThread(e.target.value)}
             />

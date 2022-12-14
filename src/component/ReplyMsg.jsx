@@ -58,21 +58,10 @@ export default function ReplyMsg({ onReplySend }) {
 
   // upload to server
   const handleFileUpload = async () => {
-    const files = [...Files];
-    files.forEach((file) => uploadFile(file));
+    // const files = [...Files];
+    // files.forEach((file) => uploadFile(file));
   };
 
-  const uploadFile = async (file) => {
-    console.log(file);
-    const { api_url, user_id, order_id } = pluginData;
-    const url = `${api_url}/upload-file`;
-    const data = new FormData();
-    data.append("file", file);
-    data.append("order_id", order_id);
-    const response = await fetch(url, { method: "POST", body: data });
-    let data2 = await response.json();
-    console.log(data2);
-  };
   return (
     <Box>
       <Paper
@@ -96,7 +85,7 @@ export default function ReplyMsg({ onReplySend }) {
           color="primary"
           sx={{ p: 1 }}
           aria-label="Send"
-          onClick={() => onReplySend(ReplyText)}
+          onClick={() => onReplySend(ReplyText, Files)}
           disabled={ReplyText === ""}
         >
           <SendOutlined />
@@ -133,7 +122,11 @@ export default function ReplyMsg({ onReplySend }) {
         ))}
       </Box>
       <Box sx={{ textAlign: "center" }}>
-        <Button variant="contained" startIcon={<CloudUploadOutlinedIcon />}>
+        <Button
+          variant="contained"
+          startIcon={<CloudUploadOutlinedIcon />}
+          onClick={handleFileUpload}
+        >
           Upload File
         </Button>
       </Box>
