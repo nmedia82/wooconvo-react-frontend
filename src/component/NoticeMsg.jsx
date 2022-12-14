@@ -15,7 +15,7 @@ export default function NoticeMsg({ message }) {
   return (
     <div>
       <List
-        sx={{ width: "100%", bgcolor: "background.paper" }}
+        sx={{ width: "100%", bgcolor: pink[50] }}
         component="nav"
         aria-labelledby="nested-list-subheader"
       >

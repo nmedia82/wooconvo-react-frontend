@@ -22,6 +22,7 @@ import { wooconvo_makeid } from "../services/helper";
 import { uploadFiles } from "../services/modalService";
 import pluginData from "../services/pluginData";
 import httpService from "../services/httpService";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 
 export default function ReplyMsg({ onReplySend }) {
   //Emoji
@@ -131,7 +132,11 @@ export default function ReplyMsg({ onReplySend }) {
           </Box>
         ))}
       </Box>
-      <Button onClick={handleFileUpload}>Upload File</Button>
+      <Box sx={{ textAlign: "center" }}>
+        <Button variant="contained" startIcon={<CloudUploadOutlinedIcon />}>
+          Upload File
+        </Button>
+      </Box>
     </Box>
   );
 }
