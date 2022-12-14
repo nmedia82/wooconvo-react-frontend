@@ -2,27 +2,13 @@ import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import {
-  Box,
-  TextField,
-  Typography,
-  Card,
-  CardContent,
-  CardActions,
-  Tooltip,
-  Chip,
-  Button,
-} from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { common } from "@mui/material/colors";
 import Attachments from "./Attachment";
 import { DeleteOutline, SendOutlined } from "@mui/icons-material";
-import { display } from "@mui/system";
+
 import { wooconvo_makeid } from "../services/helper";
-import { uploadFiles } from "../services/modalService";
-import pluginData from "../services/pluginData";
-import httpService from "../services/httpService";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 
 export default function ReplyMsg({ onReplySend }) {
   //Emoji
@@ -54,12 +40,6 @@ export default function ReplyMsg({ onReplySend }) {
     const files = [...Files];
     const filter = files.filter((file) => file.name !== file_id);
     setFiles(filter);
-  };
-
-  // upload to server
-  const handleFileUpload = async () => {
-    // const files = [...Files];
-    // files.forEach((file) => uploadFile(file));
   };
 
   return (
@@ -104,6 +84,7 @@ export default function ReplyMsg({ onReplySend }) {
               height="100"
               width="150"
               id={`preview-${file.name}`}
+              alt={file.name}
             />
             <p className="preview-thumb-tool">
               <IconButton
@@ -120,15 +101,6 @@ export default function ReplyMsg({ onReplySend }) {
             </p>
           </Box>
         ))}
-      </Box>
-      <Box sx={{ textAlign: "center" }}>
-        <Button
-          variant="contained"
-          startIcon={<CloudUploadOutlinedIcon />}
-          onClick={handleFileUpload}
-        >
-          Upload File
-        </Button>
       </Box>
     </Box>
   );

@@ -9,12 +9,11 @@ import pluginData from "./services/pluginData";
 import { Backdrop, CircularProgress } from "@mui/material";
 function App() {
   const [Thread, setThread] = useState([]);
-  const [Attachments, setAttachments] = useState([]);
   const [FilterThread, setFilterThread] = useState([]);
   const [showMore, setshowMore] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
 
-  const { order_date, order_id, context } = pluginData;
+  const { api_url, order_date, order_id, context } = pluginData;
 
   useEffect(() => {
     const loadThread = async () => {
@@ -28,12 +27,11 @@ function App() {
 
     setIsWorking(true);
     loadThread();
-  }, []);
+  }, [order_id]);
 
   const handleReplySend = async (reply_text, files = []) => {
     setIsWorking(true);
     const attachments = await handleFileUpload(files);
-    // const attachments = [...Attachments];
     console.log(attachments);
     const { data: response } = await addMessage(reply_text, attachments);
     const { success, data: order } = response;
@@ -49,28 +47,25 @@ function App() {
   // upload to server
   const handleFileUpload = (files) => {
     var promises = [];
-    var attachments = [];
     files.forEach(async (file) => {
-      promises.push(
-        uploadFile(file).then((file) => {
-          attachments.push(file);
-        })
-      );
+      const p = new Promise(async (resolve, reject) => {
+        const resp = await uploadFile(file);
+        const { data: attachment } = await resp.json();
+        resolve(attachment);
+      });
+      promises.push(p);
     });
-
-    return Promise.all(promises).then(attachments);
-    // return [...Attachments];
+    return Promise.all(promises);
   };
 
-  const uploadFile = async (file) => {
+  const uploadFile = (file) => {
     // console.log(file);
-    const { api_url, user_id, order_id } = pluginData;
     const url = `${api_url}/upload-file`;
     const data = new FormData();
     data.append("file", file);
     data.append("order_id", order_id);
-    const response = await fetch(url, { method: "POST", body: data });
-    return response.json(); // console.log(attachment);
+    return fetch(url, { method: "POST", body: data });
+    // return response.json(); // console.log(attachment);
 
     // console.log(attachments);
   };
