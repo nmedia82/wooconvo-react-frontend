@@ -8,12 +8,14 @@ import {
   Collapse,
   ListItemButton,
   Divider,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
 //import InfoIcon from "@mui/icons-material/Info";
 import { blue, green } from "@mui/material/colors";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 export default function CustomerMsg({ message, showMore }) {
   function stringAvatar(name) {
     return {
@@ -68,6 +70,11 @@ export default function CustomerMsg({ message, showMore }) {
           <Typography variant="body1" gutterBottom>
             {message.message}
           </Typography>
+          <Tooltip title="Upload File">
+            <IconButton aria-label="">
+              <CloudUploadIcon color="primary" />
+            </IconButton>
+          </Tooltip>
         </ListItemText>
       </Collapse>
     </div>
