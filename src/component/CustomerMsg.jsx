@@ -11,11 +11,11 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-//import InfoIcon from "@mui/icons-material/Info";
 import { blue, green } from "@mui/material/colors";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+
 export default function CustomerMsg({ message, showMore }) {
   function stringAvatar(name) {
     return {
@@ -31,6 +31,7 @@ export default function CustomerMsg({ message, showMore }) {
   const handleClick = () => {
     setOpen(!open);
   };
+
   return (
     <div>
       <ListItemButton onClick={handleClick}>
@@ -71,8 +72,12 @@ export default function CustomerMsg({ message, showMore }) {
             {message.message}
           </Typography>
           <Tooltip title="Upload File">
-            <IconButton aria-label="">
-              <CloudUploadIcon color="primary" />
+            <IconButton
+              // onClick={handleFileUpload}
+              aria-label=""
+              sx={{ mt: 2, backgroundColor: blue[800] }}
+            >
+              <CloudUploadOutlinedIcon sx={{ color: "white" }} />
             </IconButton>
           </Tooltip>
         </ListItemText>
