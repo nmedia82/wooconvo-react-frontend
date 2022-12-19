@@ -2,15 +2,18 @@
 import httpService from "./httpService";
 import pluginData from "./pluginData";
 
+const { api_url, user_id, order_id, context } = pluginData;
+
 // get order detail by id
 export function getOrderDetail(order_id) {
-  const url = `${pluginData.api_url}/get-order-detail?order_id=${order_id}`;
+  const user_type = context === "myaccount" ? "customer" : "";
+
+  const url = `${api_url}/get-order-detail?order_id=${order_id}&user_type=${user_type}`;
   return httpService.get(url);
 }
 
 // add message in order
 export function addMessage(message, attachments = []) {
-  const { api_url, user_id, order_id } = pluginData;
   const url = `${api_url}/add-message`;
   const data = { message, user_id, order_id, attachments };
   return httpService.post(url, data);
@@ -18,8 +21,6 @@ export function addMessage(message, attachments = []) {
 
 // upload files to site
 export function uploadFiles(file) {
-  console.log(file);
-  const { api_url, user_id, order_id } = pluginData;
   const url = `${api_url}/upload-file`;
   const data = new FormData();
   data.append("file", file);
