@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { alpha, styled } from "@mui/material/styles";
-
 import {
   Chip,
   Box,
@@ -8,18 +5,17 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  InputBase,
   TextField,
 } from "@mui/material";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import { ArrowBack, UnfoldLess } from "@mui/icons-material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { pink } from "@mui/material/colors";
-import "../style.css";
+import { get_setting } from "../services/helper";
+
 const darkTheme = createTheme({
   palette: {
     primary: {
-      main: "#000",
+      main: get_setting("bg_color_message_header", "#000"),
     },
   },
 });
@@ -30,8 +26,7 @@ function NavBar({
   showMore,
   onSearchThread,
   OrderID,
-  OrderDate,
-  Context,
+  onBack,
 }) {
   return (
     <ThemeProvider theme={darkTheme}>
@@ -46,31 +41,32 @@ function NavBar({
               display: { xs: "none", sm: "block" },
             }}
           >
-            {Context === "vendor_view" && (
-              <>
-                <IconButton
-                  size="large"
-                  edge="start"
-                  aria-label="open drawer"
-                  sx={{ mr: 2 }}
-                >
-                  <ArrowBack />
-                </IconButton>
-                <Chip
-                  label={`#${OrderID} - ${OrderDate}`}
-                  variant="outlined"
-                  sx={{ mr: 5, color: "#fff" }}
-                />
-              </>
-            )}
+            <IconButton
+              size="large"
+              edge="start"
+              aria-label="open drawer"
+              sx={{ mr: 2, color: "#fff" }}
+              onClick={onBack}
+            >
+              <ArrowBack />
+            </IconButton>
             <Chip
-              label={`Total Messages ${TotalCount}`}
+              label={`#${OrderID}`}
               variant="outlined"
-              sx={{ color: "white" }}
+              sx={{ mr: 5, color: "#fff" }}
             />
+
+            {get_setting("enable_msg_count_display") && (
+              <Chip
+                label={`Total Messages ${TotalCount}`}
+                variant="outlined"
+                sx={{ color: "white" }}
+              />
+            )}
           </Typography>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <TextField
+            
+            {get_setting("enable_msg_search")&& (<TextField
               sx={{ bgcolor: "white" }}
               label="Search"
               size="small"
@@ -78,7 +74,7 @@ function NavBar({
               id="margin-none"
               onChange={(e) => onSearchThread(e.target.value)}
             />
-
+            )}
             <IconButton
               onClick={() => onCollapsed(!showMore)}
               size="small"

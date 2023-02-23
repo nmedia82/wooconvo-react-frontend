@@ -1,110 +1,115 @@
 import { useState, useEffect } from "react";
-import WooConvoThread from "./pages/WooConvoThread";
-import { getOrderDetail } from "./services/modalService";
-import { addMessage } from "./services/modalService";
-import { Box } from "@mui/system";
-import NavBar from "./component/NavBar";
+import { Box, Backdrop, CircularProgress } from "@mui/material";
+import "./App.css";
+import {
+  getAdminMeta,
+  getOrders,
+  getSettings,
+  saveSettings,
+  setStarred,
+  setUnStarred,
+} from "./services/modalService";
+
 import pluginData from "./services/pluginData";
+import FrontendView from "./pages/FrontendView";
 
-import { Backdrop, CircularProgress } from "@mui/material";
+const { context, settings } = pluginData;
+
 function App() {
-  const [Thread, setThread] = useState([]);
-  const [FilterThread, setFilterThread] = useState([]);
-  const [showMore, setshowMore] = useState(true);
+  const [Orders, setOrders] = useState([]);
+  const [Meta, setMeta] = useState([]);
+  //  const [pluginSettings, setPluginSettings] = useLocalStorage(
+  //    "wooconvo_settings",
+  //    {}
+  //  );
   const [isWorking, setIsWorking] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [MenuChecked, setMenuChecked] = useState(null);
 
-  const { api_url, order_date, order_id, context } = pluginData;
+  const IsAdminView = context === "wp_admin" ? true : false;
+  // console.log(context, IsAdminView);
 
   useEffect(() => {
-    const loadThread = async () => {
-      const { data: order } = await getOrderDetail(order_id);
-      const threads = [...order.data.thread];
-      // console.log(order);
+    const loadData = async () => {
+      setIsWorking(true);
+      var { data: meta } = await getAdminMeta();
+      const { success, data } = meta;
+      if (!success) return alert("Error while loading admin settings");
+      setMeta(JSON.parse(data));
+
+      let { data: orders } = await getOrders();
+      orders = orders.data;
+      setOrders(orders);
+      setMenuChecked("orders");
+
+      // plugin settings
+      // const { data: settings } = await getSettings();
+      // setPluginSettings(settings.data);
+      // console.log(JSON.parse(data));
+
+      // setPluginSettings(settings);
       setIsWorking(false);
-      setThread(threads);
-      setFilterThread(threads);
     };
+    loadData();
+  },);
 
+  const handleStarred = async (order_id, is_starred) => {
     setIsWorking(true);
-    loadThread();
-  }, [order_id]);
-
-  const handleReplySend = async (reply_text, files = []) => {
-    setIsWorking(true);
-    const attachments = await handleFileUpload(files);
-    console.log(attachments);
-    const { data: response } = await addMessage(reply_text, attachments);
-    const { success, data: order } = response;
-    const { thread } = order;
-    // console.log(thread);
+    var { data: order } = is_starred
+      ? await setUnStarred(order_id)
+      : await setStarred(order_id);
+    const orders = [...Orders];
+    const found = orders.find((order) => order.order_id === order_id);
+    const index = orders.indexOf(found);
+    orders[index] = order.data;
+    setOrders(orders);
     setIsWorking(false);
-    if (success) {
-      setThread(thread);
-      setFilterThread(thread);
-    }
   };
 
-  // upload to server
-  const handleFileUpload = (files) => {
-    var promises = [];
-    files.forEach(async (file) => {
-      const p = new Promise(async (resolve, reject) => {
-        const resp = await uploadFile(file);
-        const { data: attachment } = await resp.json();
-        resolve(attachment);
-      });
-      promises.push(p);
-    });
-    return Promise.all(promises);
+  const handleMenuChange = (menu) => {
+    setShowAlert(false);
+    setMenuChecked(menu);
   };
 
-  const uploadFile = (file) => {
-    // console.log(file);
-    const url = `${api_url}/upload-file`;
-    const data = new FormData();
-    data.append("file", file);
-    data.append("order_id", order_id);
-    return fetch(url, { method: "POST", body: data });
-    // return response.json(); // console.log(attachment);
-
-    // console.log(attachments);
+  const handleSettingSave = async (settings) => {
+    setIsWorking(true);
+    setShowAlert(false);
+    const { data: resp } = await saveSettings(settings);
+    // setPluginSettings(resp.data);
+    setShowAlert(true);
+    setIsWorking(false);
   };
-
-  const handleSearch = (str) => {
-    let thread = [...Thread];
-    thread = thread.filter((r) => matchSearch(str, r.message));
-    console.log(thread);
-    setFilterThread(thread);
-  };
-  const matchSearch = (text, testwith) => {
-    const regex = new RegExp("(?:^|\\s)" + text, "gi");
-    return regex.test(testwith);
-  };
-
   return (
-    <Box id="wooconvo-front-wrapper">
-      <NavBar
-        TotalCount={FilterThread.length}
-        OrderID={order_id}
-        OrderDate={order_date}
-        Context={context}
-        onCollapsed={() => setshowMore(!showMore)}
-        showMore={showMore}
-        onSearchThread={handleSearch}
-      />
-      <WooConvoThread
-        Thread={FilterThread}
-        onReplySend={handleReplySend}
-        showMore={showMore}
-      />
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isWorking}
-        onClick={() => setIsWorking(false)}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </Box>
+    <div className="wooconvo-admin-wrapper">
+      {/* <Admin Meta={Meta} /> */}
+      {/* <Admin_react /> */}
+
+      <Box sx={{ flexGrow: 1 }} className="wooconvo-admin-wrapper">
+         {!IsAdminView && (
+          <FrontendView Orders={Orders} onStarred={handleStarred} />
+        )} 
+         {/* {IsAdminView && (
+          <AdminView
+            Meta={Meta}
+            Orders={Orders}
+            showAlert={showAlert}
+            MenuChecked={MenuChecked}
+            onCloseAlert={() => setShowAlert(false)}
+            onSettingSave={handleSettingSave}
+            onStarred={handleStarred}
+            onMenuChange={handleMenuChange}
+            pluginSettings={pluginSettings}
+          />
+        )}  */}
+        <Backdrop
+          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={isWorking}
+          onClick={() => setIsWorking(false)}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </Box>
+    </div>
   );
 }
 

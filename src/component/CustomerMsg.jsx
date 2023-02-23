@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   Typography,
   Grid,
@@ -10,25 +9,22 @@ import {
   ListItemButton,
   Divider,
   IconButton,
-  Tooltip,
-  Button,
   Box,
 } from "@mui/material";
+//import InfoIcon from "@mui/icons-material/Info";
 import { blue, green } from "@mui/material/colors";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { DownloadOutlined } from "@mui/icons-material";
+import { get_setting } from "../services/helper";
 
-export default function CustomerMsg({ message, showMore }) {
+export default function CustomerMsg({ message, showMore, onDownload }) {
   function stringAvatar(name) {
     return {
       children: `${name.split(" ")[0][0]}`,
     };
   }
   const [open, setOpen] = useState(false);
-  const hiddenFileInput = useRef(null);
-
   useEffect(() => {
     setOpen(showMore);
   }, [showMore]);
@@ -36,10 +32,13 @@ export default function CustomerMsg({ message, showMore }) {
   const handleClick = () => {
     setOpen(!open);
   };
-  const handleclick = (event) => {
-    hiddenFileInput.current.click();
-  };
 
+  const getDisplayName = (msg) => {
+    const firstname_only = get_setting("firstname_display");
+    const { user_name, first_name } = msg;
+    if (firstname_only && first_name) return first_name;
+    return user_name;
+  };
   return (
     <div>
       <ListItemButton onClick={handleClick}>
@@ -60,7 +59,7 @@ export default function CustomerMsg({ message, showMore }) {
                 variant="span"
                 color="text.primary"
               >
-                {message.user_name}
+                {getDisplayName(message)}
               </Typography>
               <Typography
                 sx={{ display: "inline", ml: 2 }}
@@ -72,10 +71,14 @@ export default function CustomerMsg({ message, showMore }) {
             </>
           }
         />
+
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
+
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <ListItemText sx={{ backgroundColor: "lightgray", p: 2 }}>
+        <ListItemText
+          sx={{ backgroundColor: get_setting("bg_color_order_messages"), p: 2 }}
+        >
           <Typography variant="body1" gutterBottom>
             {message.message}
           </Typography>
@@ -87,8 +90,8 @@ export default function CustomerMsg({ message, showMore }) {
             }}
           >
             {message.attachments &&
-              message.attachments.map((att) => (
-                <Box className="preview-thumb-upload">
+              message.attachments.map((att, index) => (
+                <Box className="preview-thumb-upload" key={index}>
                   <img
                     src={att.thumbnail}
                     className="preview-thumb-img-upload"
@@ -97,7 +100,7 @@ export default function CustomerMsg({ message, showMore }) {
                     alt={att.filename}
                   />
                   <p className="preview-thumb-tool-upload">
-                    <IconButton>
+                    <IconButton onClick={() => onDownload(att)}>
                       <DownloadOutlined />
                     </IconButton>
                   </p>
