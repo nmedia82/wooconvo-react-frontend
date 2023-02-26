@@ -18,7 +18,7 @@ window.WOOCONVO_Data = JSON.stringify({
     enable_file_attachments: true,
     max_files_allowed: 2,
     max_file_size: 50,
-    thumb_size: 200,
+    thumb_size: 75,
     file_types_allowed: "jpg,png,pdf",
     attachments_required: true,
     attachments_in_email: true,
@@ -33,9 +33,8 @@ window.WOOCONVO_Data = JSON.stringify({
   },
 });
 
-const { order_id, user_id, order_date, api_url, context } = JSON.parse(
-  window.WOOCONVO_Data
-);
+const { order_id, user_id, order_date, api_url, context, settings } =
+  JSON.parse(window.WOOCONVO_Data);
 
 export default {
   order_date,
@@ -43,4 +42,5 @@ export default {
   user_id,
   api_url,
   context,
+  settings,
 };
