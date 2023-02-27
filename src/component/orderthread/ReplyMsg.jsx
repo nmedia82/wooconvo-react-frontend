@@ -109,7 +109,6 @@ export default function ReplyMsg({ onReplySend }) {
 
         <Divider sx={{ height: "auto" }} orientation="vertical" />
 
-        <QuickReplyPopup />
         <IconButton
           sx={{ p: 1, color: get_setting("icon_color_send_button") }}
           aria-label="Send"

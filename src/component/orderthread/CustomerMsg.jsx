@@ -93,7 +93,7 @@ export default function CustomerMsg({ message, showMore, onDownload }) {
                     alt={att.filename}
                   />
                   <p className="preview-thumb-tool-upload">
-                    <IconButton onClick={() => onDownload(att.filename)}>
+                    <IconButton onClick={() => onDownload(att)}>
                       <DownloadOutlined />
                     </IconButton>
                   </p>

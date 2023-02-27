@@ -1,7 +1,7 @@
 window.WOOCONVO_Data = JSON.stringify({
   api_url: "https://wooconvo.najeebmedia.com/wp-json/wooconvo/v1",
   user_id: 3,
-  order_id: 116,
+  order_id: 141,
   order_date: new Date(),
   context: "myaccount",
   settings: {
@@ -15,7 +15,7 @@ window.WOOCONVO_Data = JSON.stringify({
     icon_color_upload_button: "blue",
     enable_order_notices: true,
     reverse_message_display_order: true,
-    enable_file_attachments: true,
+    enable_file_attachments: false,
     max_files_allowed: 2,
     max_file_size: 50,
     thumb_size: 75,
@@ -25,7 +25,7 @@ window.WOOCONVO_Data = JSON.stringify({
     image_open_click: false,
     enable_quickreply: false,
     quick_replies: ["Hi", "Well done man."],
-    enable_revisions: false,
+    enable_revisions: true,
     revisions_note: "Please request max 5 revisions",
     revisions_limit: 5,
     revisions_orderchange: "wc-completed",
