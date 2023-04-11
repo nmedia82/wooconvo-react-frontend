@@ -105,7 +105,7 @@ export default function ReplyMsg({ onReplySend }) {
     <Box>
       <Paper
         className="reply"
-        component="form"
+        component="div"
         sx={{ p: "2px 4px", display: "flex", bgcolor: common }}
       >
         {get_setting("enable_file_attachments") && (
