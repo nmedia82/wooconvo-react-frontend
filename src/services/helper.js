@@ -89,3 +89,35 @@ export const is_livechat_read = () => {
 export const sanitize_filename = (file_name) => {
   return file_name.replace(/[^a-zA-Z0-9\-\.]/gi, "_").toLowerCase();
 };
+
+export function nl2br(str) {
+  return str.replace(/(?:\r\n|\r|\n)/g, "<br>");
+}
+
+export function orderconvo_date(dateString) {
+  const date = new Date(dateString);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthName = months[date.getMonth()];
+  const day = date.getDate();
+  const year = date.getFullYear().toString().substr(-4);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+  return `${monthName} ${day}, ${year} ${formattedHours}:${formattedMinutes}${ampm}`;
+}

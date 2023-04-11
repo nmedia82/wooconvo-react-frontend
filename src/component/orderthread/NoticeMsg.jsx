@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import InfoIcon from "@mui/icons-material/Info";
-import { get_setting } from "../../services/helper";
+import { get_setting, orderconvo_date } from "../../services/helper";
 
 export default function NoticeMsg({ message }) {
   return (
@@ -45,7 +45,7 @@ export default function NoticeMsg({ message }) {
                     variant="span"
                     color="text.primary"
                   >
-                    {message.date}
+                    {orderconvo_date(message.date)}
                   </Typography>
                 </>
               }

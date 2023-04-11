@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-import { ArrowBack, UnfoldLess } from "@mui/icons-material";
+import { UnfoldLess } from "@mui/icons-material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { get_setting } from "../../services/helper";
 
@@ -26,7 +26,9 @@ function NavBar({
   showMore,
   onSearchThread,
   OrderID,
+  RevisionLimit,
 }) {
+  const enable_revisions = get_setting("enable_revisions");
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="static">
@@ -41,7 +43,7 @@ function NavBar({
             }}
           >
             <Chip
-              label={`#${OrderID}`}
+              label={`Order #${OrderID}`}
               variant="outlined"
               sx={{ mr: 5, color: "#fff" }}
             />
@@ -51,6 +53,16 @@ function NavBar({
                 label={`Total Messages ${TotalCount}`}
                 variant="outlined"
                 sx={{ color: "white" }}
+              />
+            )}
+
+            {enable_revisions && (
+              <Chip
+                label={`Revisions Left: ${
+                  RevisionLimit - TotalCount
+                }/${RevisionLimit}`}
+                variant="outlined"
+                sx={{ color: "white", marginLeft: "5px" }}
               />
             )}
           </Typography>

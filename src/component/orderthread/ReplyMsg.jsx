@@ -83,6 +83,19 @@ export default function ReplyMsg({ onReplySend }) {
     return false;
   };
 
+  const handleEnterKey = (event) => {
+    if (ReplyText === "" || get_setting("show_textarea_reply")) return;
+
+    if (event.key === "Enter") {
+      handleReplySend();
+    }
+  };
+
+  const handleReplySend = () => {
+    onReplySend(ReplyText, Files);
+    setReplyText("");
+  };
+
   const getThumbSize = () => {
     const thum_size = get_setting("thumb_size", 150);
     return thum_size;
@@ -105,6 +118,9 @@ export default function ReplyMsg({ onReplySend }) {
           fullWidth
           id="standard-basic"
           variant="standard"
+          onKeyPress={handleEnterKey}
+          multiline={get_setting("show_textarea_reply", false)} // Add this prop to enable multiline
+          rows={4} // Set the number of rows to show
         />
 
         <Divider sx={{ height: "auto" }} orientation="vertical" />

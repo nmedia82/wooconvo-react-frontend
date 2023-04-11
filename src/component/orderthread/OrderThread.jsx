@@ -255,6 +255,7 @@ export default function WooConvoThread({ Order }) {
         onCollapsed={() => setshowMore(!showMore)}
         showMore={showMore}
         onSearchThread={handleSearch}
+        RevisionLimit={RevisionLimit}
       />
       <MessagesBody
         Thread={FilterThread}
