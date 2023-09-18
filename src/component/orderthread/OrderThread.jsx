@@ -227,13 +227,14 @@ export default function WooConvoThread({ Order }) {
 
   const canReply = () => {
     let can_reply = true;
+    // if order status is cancelled
+    if (Order.status === "wc-cancelled") return false;
     const disable_on_complete = get_setting("disable_on_completed");
     can_reply =
       disable_on_complete && Order.status === "wc-completed" ? false : true;
     const enable_revisions = get_setting("enable_revisions");
     if (enable_revisions) {
-      const revisions_limit = get_setting("revisions_limit");
-      can_reply = revisions_limit > totalCustomerMessages;
+      can_reply = RevisionLimit > totalCustomerMessages;
     }
     return can_reply;
   };
