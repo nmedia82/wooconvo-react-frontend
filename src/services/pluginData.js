@@ -1,7 +1,7 @@
 // window.WOOCONVO_Data = JSON.stringify({
-//   api_url: "https://wooconvo.najeebmedia.com/wp-json/wooconvo/v1",
-//   user_id: 3,
-//   order_id: 26,
+//   api_url: "https://plugins.nmdevteam.com/wp-json/wooconvo/v1",
+//   user_id: 28,
+//   order_id: 1756,
 //   order_date: new Date(),
 //   context: "myaccount",
 //   settings: {
@@ -14,7 +14,7 @@
 //     icon_color_send_button: "#000",
 //     icon_color_upload_button: "blue",
 //     enable_order_notices: true,
-//     reverse_message_display_order: true,
+//     reverse_message_display_order: false,
 //     enable_file_attachments: false,
 //     max_files_allowed: 2,
 //     max_file_size: 50,

@@ -7,6 +7,10 @@ import { get_setting } from "../../services/helper";
 function MessagesBody({ Thread, showMore, onDownload }) {
   const order_reverse = get_setting("reverse_message_display_order");
   var thread = [...Thread];
+
+  // hot fix, if user data is not present remove those messages
+  thread = thread.filter((t) => t.user_id);
+  console.log(thread);
   if (order_reverse) {
     thread.reverse();
   }

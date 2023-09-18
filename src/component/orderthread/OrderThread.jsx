@@ -266,7 +266,9 @@ export default function WooConvoThread({ Order }) {
       <Divider variant="inset" component="h2" sx={{ height: 10 }} />
 
       {/* Reply to --- */}
-      <ReplyMsg onReplySend={handleReplySend} />
+      {canReply() && (
+        <ReplyMsg onReplySend={handleReplySend} context={context} />
+      )}
 
       {/* Revision Addons */}
       {canRevise() && (

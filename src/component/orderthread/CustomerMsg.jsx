@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import {
   Typography,
-  Grid,
   ListItemAvatar,
   ListItemText,
   Avatar,
   Collapse,
   ListItemButton,
-  Divider,
   IconButton,
   Box,
 } from "@mui/material";
 //import InfoIcon from "@mui/icons-material/Info";
-import { blue, green } from "@mui/material/colors";
+import { green } from "@mui/material/colors";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { DownloadOutlined } from "@mui/icons-material";
@@ -38,8 +36,7 @@ export default function CustomerMsg({ message, showMore, onDownload }) {
         <ListItemAvatar>
           <Avatar
             sx={{
-              bgcolor:
-                message.user_type === "customer" ? green[600] : blue[600],
+              bgcolor: green[600],
             }}
             {...stringAvatar(message.user_name.toUpperCase())}
           />
