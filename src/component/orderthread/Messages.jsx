@@ -10,7 +10,7 @@ function MessagesBody({ Thread, showMore, onDownload }) {
 
   // hot fix, if user data is not present remove those messages
   thread = thread.filter((t) => t.user_id);
-  console.log(thread);
+
   if (order_reverse) {
     thread.reverse();
   }
