@@ -10,7 +10,7 @@ import { DeleteOutline, SendOutlined } from "@mui/icons-material";
 import QuickReplyPopup from "./QuickReply";
 import { get_setting, wooconvo_makeid } from "../../services/helper";
 
-export default function ReplyMsg({ onReplySend }) {
+export default function ReplyMsg({ onReplySend, context }) {
   //Emoji
   const [ReplyText, setReplyText] = useState("");
   const [Files, setFiles] = useState([]);
@@ -94,6 +94,14 @@ export default function ReplyMsg({ onReplySend }) {
   const handleReplySend = () => {
     onReplySend(ReplyText, Files);
     setReplyText("");
+    previewFile([]);
+    setFiles([]);
+  };
+
+  const handleQuickReplySend = (reply) => {
+    onReplySend(reply, Files);
+    previewFile([]);
+    setFiles([]);
   };
 
   const getThumbSize = () => {
@@ -125,10 +133,14 @@ export default function ReplyMsg({ onReplySend }) {
 
         <Divider sx={{ height: "auto" }} orientation="vertical" />
 
+        {get_setting("enable_quickreply") && context !== "myaccount" && (
+          <QuickReplyPopup onQuickReplySend={handleQuickReplySend} />
+        )}
+
         <IconButton
           sx={{ p: 1, color: get_setting("icon_color_send_button") }}
           aria-label="Send"
-          onClick={() => onReplySend(ReplyText, Files)}
+          onClick={handleReplySend}
           disabled={ReplyText === "" || validateAttachments()}
         >
           <SendOutlined />
