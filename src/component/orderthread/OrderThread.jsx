@@ -231,7 +231,7 @@ export default function WooConvoThread({ Order }) {
     if (Order.status === "wc-cancelled") return false;
     const disable_on_complete = get_setting("disable_on_completed");
     can_reply =
-      disable_on_complete && Order.status === "wc-completed" ? false : true;
+      disable_on_complete && Order.status === "completed" ? false : true;
     const enable_revisions = get_setting("enable_revisions");
     if (enable_revisions) {
       can_reply = RevisionLimit > totalCustomerMessages;
