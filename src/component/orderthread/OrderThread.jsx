@@ -228,7 +228,7 @@ export default function WooConvoThread({ Order }) {
   const canReply = () => {
     let can_reply = true;
     // if order status is cancelled
-    if (Order.status === "wc-cancelled") return false;
+    if (Order.status === "cancelled") return false;
     const disable_on_complete = get_setting("disable_on_completed");
     can_reply =
       disable_on_complete && Order.status === "completed" ? false : true;
