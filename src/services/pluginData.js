@@ -34,7 +34,7 @@
 //   },
 // });
 
-const { order_id, user_id, order_date, api_url, context, settings } =
+const { order_id, user_id, order_date, api_url, context, settings, wp_nonce } =
   JSON.parse(window.WOOCONVO_Data);
 
 export default {
@@ -44,4 +44,5 @@ export default {
   api_url,
   context,
   settings,
+  wp_nonce,
 };

@@ -1,5 +1,6 @@
 import axios from "axios";
 // import { token } from "./auth";
+const { wp_nonce } = JSON.parse(window.WOOCONVO_Data);
 
 // New axio interceptor syntax from
 // source: https://stackoverflow.com/questions/68714143/how-can-i-use-axios-interceptors-to-add-some-headers-to-responses
@@ -10,6 +11,8 @@ axios.interceptors.request.use(
     //   config.headers["Authorization"] = "Basic " + token;
     // }
     config.headers["Content-Type"] = "application/json";
+    if (wp_nonce) config.headers["X-WP-Nonce"] = wp_nonce;
+    // Check if the request is a GET request
     return config;
   },
   (error) => {
