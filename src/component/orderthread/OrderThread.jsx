@@ -29,7 +29,7 @@ const IsAWSReady = is_aws_ready();
 // check LiveChat Addon is ready
 const isLiveChatReady = is_livechat_read();
 // import { resetUnread } from "../../common/modalService";
-const { order_id, order_date, api_url, context } = pluginData;
+const { order_id, order_date, api_url, context, wp_nonce } = pluginData;
 
 export default function WooConvoThread({ Order }) {
   const [Thread, setThread] = useState([]);
@@ -91,19 +91,20 @@ export default function WooConvoThread({ Order }) {
     setIsWorking(true);
     var attachments = [];
     // console.log(IsAWSReady);
-    if (IsAWSReady === false) {
-      attachments = await handleFileUpload(files);
-    } else {
-      attachments = await handleFileUploadAWS(files);
-    }
 
     try {
+      if (IsAWSReady === false) {
+        attachments = await handleFileUpload(files);
+      } else {
+        attachments = await handleFileUploadAWS(files);
+      }
       const { data: response } = await addMessage(
         order_id,
         reply_text,
         attachments
       );
       const { success, data: order } = response;
+      // console.log(isLiveChatReady);
       const { thread } = order;
       setIsWorking(false);
       if (success && isLiveChatReady === false) {
@@ -111,6 +112,8 @@ export default function WooConvoThread({ Order }) {
         setFilterThread(thread);
       }
     } catch (error) {
+      alert(`Error : ${error.message}`);
+      setIsWorking(false);
       console.log(error);
     }
   };
@@ -149,17 +152,20 @@ export default function WooConvoThread({ Order }) {
   };
 
   // upload to server
-  const handleFileUpload = (files) => {
-    var promises = [];
-    files.forEach(async (file) => {
-      const p = new Promise(async (resolve, reject) => {
+  const handleFileUpload = async (files) => {
+    try {
+      const promises = files.map(async (file) => {
         const resp = await uploadFile(file);
-        const { data: attachment } = await resp.json();
-        resolve(attachment);
+        const { data } = await resp.json();
+        if (data.status && data.status === 403) {
+          throw new Error("Error while uploading the file");
+        }
+        return data;
       });
-      promises.push(p);
-    });
-    return Promise.all(promises);
+      return Promise.all(promises);
+    } catch (error) {
+      throw error; // Re-throw the error to be caught by the caller
+    }
   };
 
   // upload to local server
@@ -169,7 +175,11 @@ export default function WooConvoThread({ Order }) {
     const data = new FormData();
     data.append("file", file);
     data.append("order_id", order_id);
-    return fetch(url, { method: "POST", body: data });
+    // Create headers object with the nonce included
+    const headers = new Headers();
+    headers.append("X-WP-Nonce", wp_nonce);
+
+    return fetch(url, { method: "POST", body: data, headers });
   };
 
   // upload to aws server
