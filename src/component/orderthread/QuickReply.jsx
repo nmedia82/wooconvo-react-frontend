@@ -18,7 +18,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import QuickreplyIcon from "@mui/icons-material/Quickreply";
 import SendIcon from "@mui/icons-material/Send";
-export default function QuickReplyPopup() {
+import { get_setting } from "../../services/helper";
+
+const quick_replies = get_setting("quick_replies") || [];
+
+export default function QuickReplyPopup({ onQuickReplySend }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -27,6 +31,11 @@ export default function QuickReplyPopup() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleQuickReply = (text) => {
+    setOpen(false);
+    onQuickReplySend(text);
   };
 
   return (
@@ -53,44 +62,22 @@ export default function QuickReplyPopup() {
           </Toolbar>
         </AppBar>
         <List sx={{ width: "100%", bgcolor: "background.paper", mt: "20px" }}>
-          <ListItem>
-            <ListItemText primary="Ok Admin Now You See." />
+          {quick_replies.map((reply, index) => (
+            <ListItem key={index}>
+              <ListItemText primary={reply} />
+              <ListItemIcon>
+                <Tooltip title="Send Message" arrow placement="top-start">
+                  <IconButton
+                    sx={{ color: "#1976d2" }}
+                    onClick={() => handleQuickReply(reply)}
+                  >
+                    <SendIcon />
+                  </IconButton>
+                </Tooltip>
+              </ListItemIcon>
+            </ListItem>
+          ))}
 
-            {/* Send icon With tooltip */}
-            <ListItemIcon>
-              <Tooltip title="Send Message" arrow placement="top-start">
-                <IconButton sx={{ color: "#1976d2" }}>
-                  <SendIcon />
-                </IconButton>
-              </Tooltip>
-            </ListItemIcon>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="Thank U So Much" />
-
-            {/* Send icon With tooltip */}
-            <ListItemIcon>
-              <Tooltip title="Send Message" arrow placement="top-start">
-                <IconButton sx={{ color: "#1976d2" }}>
-                  <SendIcon />
-                </IconButton>
-              </Tooltip>
-            </ListItemIcon>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemText primary="My Pleasure Anytime" />
-
-            {/* Send icon With tooltip */}
-            <ListItemIcon>
-              <Tooltip title="Send Message" arrow placement="top-start">
-                <IconButton sx={{ color: "#1976d2" }}>
-                  <SendIcon />
-                </IconButton>
-              </Tooltip>
-            </ListItemIcon>
-          </ListItem>
           <Divider />
         </List>
       </Dialog>
