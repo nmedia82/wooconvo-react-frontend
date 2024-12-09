@@ -9,11 +9,13 @@ import Attachments from "./Attachments";
 import { DeleteOutline, SendOutlined } from "@mui/icons-material";
 import QuickReplyPopup from "./QuickReply";
 import { get_setting, wooconvo_makeid } from "../../services/helper";
+import AudioAttachment from "./AudioAttachment";
 
 export default function ReplyMsg({ onReplySend, context }) {
   //Emoji
   const [ReplyText, setReplyText] = useState("");
   const [Files, setFiles] = useState([]);
+  const [selectedAudio, setSelectedAudio] = useState(null);
 
   const validateSelectedFiles = (files_selected) => {
     // max_files_allowed
@@ -104,6 +106,11 @@ export default function ReplyMsg({ onReplySend, context }) {
     setFiles([]);
   };
 
+  const handleAudioSelected = (file) => {
+    console.log("Audio file selected:", file);
+    // Handle upload or processing of the audio file here
+  };
+
   const getThumbSize = () => {
     const thum_size = get_setting("thumb_size", 150);
     return thum_size;
@@ -116,6 +123,8 @@ export default function ReplyMsg({ onReplySend, context }) {
         component="div"
         sx={{ p: "2px 4px", display: "flex", bgcolor: common }}
       >
+        <AudioAttachment onAudioSelected={handleAudioSelected} />
+
         {get_setting("enable_file_attachments") && (
           <Attachments onFileSelected={handleFileSelected} />
         )}
