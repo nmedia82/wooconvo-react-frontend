@@ -87,36 +87,46 @@ export default function WooConvoThread({ Order }) {
     });
   };
 
-  const handleReplySend = async (reply_text, files = []) => {
+  const handleReplySend = async (reply_text, files = [], audioFile = null) => {
     setIsWorking(true);
-    var attachments = [];
-    // console.log(IsAWSReady);
+    let attachments = [];
 
     try {
-      if (IsAWSReady === false) {
-        attachments = await handleFileUpload(files);
-      } else {
-        attachments = await handleFileUploadAWS(files);
+      // Combine files and audioFile into a single array if audioFile exists
+      let allFiles = [...files];
+      if (audioFile) {
+        allFiles.push(audioFile);
       }
+
+      // Handle file upload based on AWS readiness
+      if (IsAWSReady === false) {
+        attachments = await handleFileUpload(allFiles);
+      } else {
+        attachments = await handleFileUploadAWS(allFiles);
+      }
+
+      // Send the message with the uploaded attachments
       const { data: response } = await addMessage(
         order_id,
         reply_text,
         attachments
       );
       const { success, data: order } = response;
-      // console.log(isLiveChatReady);
       const { thread } = order;
+
       setIsWorking(false);
+
       if (success && isLiveChatReady === false) {
         setThread(thread);
         setFilterThread(thread);
       }
     } catch (error) {
-      alert(`Error : ${error.message}`);
+      alert(`Error: ${error.message}`);
       setIsWorking(false);
       console.log(error);
     }
   };
+
   // upload to aws
   const handleFileUploadAWS = async (files) => {
     var promises = [];

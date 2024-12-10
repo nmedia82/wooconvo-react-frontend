@@ -1,7 +1,7 @@
 window.WOOCONVO_Data = JSON.stringify({
   api_url: "https://plugins.nmdevteam.com/wp-json/wooconvo/v1",
   user_id: 28,
-  order_id: 1756,
+  order_id: 3401,
   order_date: new Date(),
   context: "myaccount",
   settings: {
@@ -16,6 +16,7 @@ window.WOOCONVO_Data = JSON.stringify({
     enable_order_notices: true,
     reverse_message_display_order: false,
     enable_file_attachments: true,
+    enable_audio_recording: true,
     max_files_allowed: 2,
     max_file_size: 50,
     thumb_size: 75,

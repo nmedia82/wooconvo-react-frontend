@@ -12,15 +12,11 @@ import { get_setting, wooconvo_makeid } from "../../services/helper";
 import AudioAttachment from "./AudioAttachment";
 
 export default function ReplyMsg({ onReplySend, context }) {
-  //Emoji
   const [ReplyText, setReplyText] = useState("");
   const [Files, setFiles] = useState([]);
   const [selectedAudio, setSelectedAudio] = useState(null);
 
   const validateSelectedFiles = (files_selected) => {
-    // max_files_allowed
-    // max_file_size
-    // file_types_allowed
     let msg = "";
     const max_files_allowed = Number(get_setting("max_files_allowed", 1));
     const max_file_size = Number(get_setting("max_file_size", 100));
@@ -32,9 +28,7 @@ export default function ReplyMsg({ onReplySend, context }) {
         !file_types_allowed.includes(files_selected[f].name.split(".").pop())
     );
     if (wrong_found) msg += `Filetypes allowed ${file_types_allowed.join(",")}`;
-    // console.log(file_types_allowed, files_selected, wrong_found);
 
-    // console.log(files_selected);
     if (files_selected.length + Files.length > max_files_allowed)
       msg += `\nMax files limit is ${max_files_allowed}`;
 
@@ -77,38 +71,27 @@ export default function ReplyMsg({ onReplySend, context }) {
     setFiles(filter);
   };
 
+  const handleAudioSelected = (file) => {
+    setSelectedAudio(file);
+  };
+
+  const removeAudioAttachment = () => {
+    setSelectedAudio(null);
+  };
+
+  const handleReplySend = () => {
+    onReplySend(ReplyText, Files, selectedAudio);
+    setReplyText("");
+    setFiles([]);
+    setSelectedAudio(null);
+  };
+
   const validateAttachments = () => {
     const attachment_enabled = get_setting("enable_file_attachments");
     if (!attachment_enabled) return false;
     const attach_required = get_setting("attachments_required");
     if (attach_required && !Files.length) return true;
     return false;
-  };
-
-  const handleEnterKey = (event) => {
-    if (ReplyText === "" || get_setting("show_textarea_reply")) return;
-
-    if (event.key === "Enter") {
-      handleReplySend();
-    }
-  };
-
-  const handleReplySend = () => {
-    onReplySend(ReplyText, Files);
-    setReplyText("");
-    previewFile([]);
-    setFiles([]);
-  };
-
-  const handleQuickReplySend = (reply) => {
-    onReplySend(reply, Files);
-    previewFile([]);
-    setFiles([]);
-  };
-
-  const handleAudioSelected = (file) => {
-    console.log("Audio file selected:", file);
-    // Handle upload or processing of the audio file here
   };
 
   const getThumbSize = () => {
@@ -123,7 +106,9 @@ export default function ReplyMsg({ onReplySend, context }) {
         component="div"
         sx={{ p: "2px 4px", display: "flex", bgcolor: common }}
       >
-        <AudioAttachment onAudioSelected={handleAudioSelected} />
+        {get_setting("enable_audio_recording") && (
+          <AudioAttachment onAudioSelected={handleAudioSelected} />
+        )}
 
         {get_setting("enable_file_attachments") && (
           <Attachments onFileSelected={handleFileSelected} />
@@ -135,16 +120,11 @@ export default function ReplyMsg({ onReplySend, context }) {
           fullWidth
           id="standard-basic"
           variant="standard"
-          onKeyPress={handleEnterKey}
-          multiline={get_setting("show_textarea_reply", false)} // Add this prop to enable multiline
-          rows={4} // Set the number of rows to show
+          multiline={get_setting("show_textarea_reply", false)}
+          rows={4}
         />
 
         <Divider sx={{ height: "auto" }} orientation="vertical" />
-
-        {get_setting("enable_quickreply") && context !== "myaccount" && (
-          <QuickReplyPopup onQuickReplySend={handleQuickReplySend} />
-        )}
 
         <IconButton
           sx={{ p: 1, color: get_setting("icon_color_send_button") }}
@@ -156,16 +136,14 @@ export default function ReplyMsg({ onReplySend, context }) {
         </IconButton>
       </Paper>
 
-      {/* Attachments Display*/}
-
-      <Box
-        sx={{ p: 3, flexDirection: "row", display: "flex", flexWrap: "wrap" }}
-      >
+      {/* Attachments Display */}
+      <Box sx={{ p: 3, display: "flex", flexWrap: "wrap", gap: 2 }}>
         {validateAttachments() && (
-          <Typography color={"red"} textAlign="center">
+          <Typography color="red" textAlign="center">
             Attachments are required
           </Typography>
         )}
+
         {Files.map((file) => (
           <Box className="preview-thumb" key={file.name}>
             <img
@@ -179,17 +157,27 @@ export default function ReplyMsg({ onReplySend, context }) {
               <IconButton
                 color="primary"
                 sx={{ p: 1 }}
-                aria-label="Send"
                 onClick={() => hanldeImageRemove(file.name)}
               >
                 <DeleteOutline />
               </IconButton>
-              <Typography variant="span" display={"block"}>
-                {file.name}
-              </Typography>
+              <Typography variant="body2">{file.name}</Typography>
             </p>
           </Box>
         ))}
+
+        {selectedAudio && (
+          <Box
+            className="audio-preview"
+            sx={{ display: "flex", alignItems: "center", gap: 2 }}
+          >
+            <audio controls src={URL.createObjectURL(selectedAudio)} />
+            <IconButton color="error" onClick={removeAudioAttachment}>
+              <DeleteOutline />
+            </IconButton>
+            <Typography variant="body2">{selectedAudio.name}</Typography>
+          </Box>
+        )}
       </Box>
     </Box>
   );
