@@ -114,3 +114,11 @@ export function isProInstalled() {
   console.log(is_pro);
   return is_pro;
 }
+
+// add message in order
+export function revisionAccepted(order_id) {
+  const { api_url, user_id } = pluginData;
+  const url = `${api_url}/revision-accepted`;
+  const data = { order_id };
+  return httpService.post(url, data);
+}

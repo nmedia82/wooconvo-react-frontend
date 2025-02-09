@@ -65,6 +65,9 @@ function AudioAttachment({ onAudioSelected }) {
       }, 60000);
     } catch (error) {
       console.error("Error starting recording:", error);
+      alert(
+        "Microphone access is denied. Please allow microphone permissions and try again."
+      );
     }
   };
 
@@ -92,13 +95,33 @@ function AudioAttachment({ onAudioSelected }) {
     }
   };
 
+  const checkMicrophonePermission = async () => {
+    try {
+      const permissionStatus = await navigator.permissions.query({
+        name: "microphone",
+      });
+      if (permissionStatus.state === "granted") {
+        handleOpen();
+      } else if (permissionStatus.state === "prompt") {
+        // Try to request permission
+        handleOpen();
+      } else {
+        alert(
+          "Microphone permission is denied. Please enable it in your browser settings."
+        );
+      }
+    } catch (error) {
+      console.error("Error checking microphone permission:", error);
+    }
+  };
+
   return (
     <Box>
       <Tooltip title="Attach Audio">
         <IconButton
-          sx={{ p: 1, color: get_setting("icon_color_upload_button", "#000") }}
+          sx={{ p: 1 }}
           aria-label="Attach Audio"
-          onClick={handleOpen}
+          onClick={checkMicrophonePermission}
         >
           <MicOutlined />
         </IconButton>

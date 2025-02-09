@@ -16,6 +16,7 @@ import {
   addMessage,
   getOrderById,
   resetUnread,
+  revisionAccepted,
 } from "../../services/modalService";
 import pluginData from "../../services/pluginData";
 import {
@@ -37,6 +38,7 @@ export default function WooConvoThread({ Order }) {
   const [showMore, setshowMore] = useState(true);
   const [isWorking, setIsWorking] = useState(false);
   const [FilterThread, setFilterThread] = useState([]);
+  const [RevisionAccepted, setRevisionAccepted] = useState(false);
 
   useEffect(() => {
     const thread = [...Order.thread];
@@ -44,12 +46,15 @@ export default function WooConvoThread({ Order }) {
     setThread(thread);
 
     const revisions_limit_order = Order.revisions_limit;
+    const revision_accepted = Order.revision_accepted || false;
     const revisions_limit_global = get_setting("revisions_limit");
     if (revisions_limit_order > 0) {
       setRevisionLimit(revisions_limit_order);
     } else if (revisions_limit_global > 0) {
       setRevisionLimit(revisions_limit_global);
     }
+
+    setRevisionAccepted(revision_accepted);
 
     const markOrderAsRead = async () => {
       const unread_count =
@@ -256,12 +261,30 @@ export default function WooConvoThread({ Order }) {
     if (enable_revisions) {
       can_reply = RevisionLimit > totalCustomerMessages;
     }
+
+    can_reply = !RevisionAccepted;
     return can_reply;
   };
 
   const canRevise = () => {
     const enable_revisions = get_setting("enable_revisions");
     return canReply() && enable_revisions;
+  };
+
+  const handleRevisionAccepted = async () => {
+    try {
+      setIsWorking(true);
+      const { data: response } = await revisionAccepted(order_id);
+      setIsWorking(false);
+
+      const { success } = response;
+      if (success) {
+        return setRevisionAccepted(true);
+      }
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+      setIsWorking(false);
+    }
   };
 
   return (
@@ -296,6 +319,7 @@ export default function WooConvoThread({ Order }) {
         <RevisionsAddon
           RevisionsLimit={RevisionLimit}
           totalCustomerMessages={totalCustomerMessages}
+          onRevisionAccepted={handleRevisionAccepted}
         />
       )}
 
