@@ -83,7 +83,7 @@ export default function CustomerMsg({ message, showMore }) {
               message.attachments.map((att, index) => (
                 <Box key={index}>
                   {/* Render image preview if the attachment is an image */}
-                  {att.is_image && (
+                  {!att.is_audio && (
                     <img
                       src={att.thumbnail}
                       className="preview-thumb-img-upload"
